@@ -10,19 +10,8 @@
 import json
 import re
 import random
-import threading
-import queue
-import sys
-import os
 import webbrowser
-import subprocess
 import datetime
-
-import nltk
-import pyaudio
-import vosk
-from gtts import gTTS
-import pygame
 
 # ─── sklearn (из предыдущей работы) ───────────────────────────────────────────
 from sklearn.feature_extraction.text import CountVectorizer

@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-telegram-bot==20.*
+gTTS
+SpeechRecognition
+pydub
+scikit-learn
+nltk
+requests

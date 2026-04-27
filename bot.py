@@ -110,6 +110,8 @@ INTENTS = {
     },
 }
 
+LOCAL_INTENTS = dict(INTENTS)
+
 with open('big_bot_config.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
     INTENTS.update(config.get('intents', {}))
@@ -235,6 +237,35 @@ print("Обучаю модель…")
 vectorizer, model = _build_model()
 print("Модель готова.")
 
+def get_intent(user_text):
+  for intent_name, intent_data in LOCAL_INTENTS.items():
+    examples = intent_data["examples"]
+    for example in examples:
+      if text_match(user_text, example):
+        print(user_text, example)
+        return intent_name
+  return None
+
+def text_match(user_text, example):
+    user_text = filter_text(user_text)
+    example = filter_text(example)
+
+    # 1. Точное совпадение
+    if user_text == example:
+        return True
+
+    # 2. Вхождение фразы
+    if user_text.find(example) != -1:
+        return True
+
+    # # 3. Проверка на опечатки (расстояние Левенштейна)
+    # distance = nltk.edit_distance(user_text, example)
+    # ratio = distance / len(example)
+
+    # if ratio < 0.4:
+    #     return True
+
+    return False
 
 def get_intent_ml(user_text: str) -> str:
     user_text = filter_text(user_text)
@@ -242,10 +273,10 @@ def get_intent_ml(user_text: str) -> str:
     return model.predict(vec_text)[0]
 
 
-def get_response(intent: str, user_text: str) -> str:
-    if intent not in INTENTS:
+def get_response(intent: str, user_text: str, intents) -> str:
+    if intent not in intents:
         return "Извините, я вас не понял."
-    responses = INTENTS[intent]["responses"]
+    responses = intents[intent]["responses"]
     chosen = random.choice(responses)
     if chosen in SKILL_HANDLERS:
         return SKILL_HANDLERS[chosen](user_text)
@@ -253,6 +284,11 @@ def get_response(intent: str, user_text: str) -> str:
 
 
 def bot(user_text: str) -> str:
+    intent = get_intent(user_text)
+    if intent is not None:
+        print('я зедсь')
+        print(intent)
+        return get_response(intent, user_text, LOCAL_INTENTS)
     intent = get_intent_ml(user_text)
-    return get_response(intent, user_text)
+    return get_response(intent, user_text, INTENTS)
 

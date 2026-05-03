@@ -1,3 +1,5 @@
+# tg_atabay.py
+
 # tg_webhook.py
 
 """
@@ -176,4 +178,4 @@ async def healthcheck():
 # ── локальный запуск (для тестирования без Railway) ───────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("tg_webhook:app", host="0.0.0.0", port=PORT, reload=False)
+    uvicorn.run("tg_atabay:app", host="0.0.0.0", port=PORT, reload=False)

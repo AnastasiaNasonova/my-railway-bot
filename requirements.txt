@@ -7,3 +7,5 @@ pydub
 scikit-learn
 nltk
 requests
+
+aiogram==2.25.1
